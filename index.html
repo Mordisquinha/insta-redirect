@@ -5,27 +5,25 @@
   <title>Saindo do Instagram…</title>
   <script>
     (function() {
-      var ua = navigator.userAgent || '';
-      // Se vier do In-App Browser do Instagram…
-      if (/Instagram/.test(ua)) {
-        // 1) criar um <a> dinâmico com target="_blank"
-        var link = document.createElement('a');
-        link.href = "https://gamerspix.com/";
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        document.body.appendChild(link);
-        link.click();
-        // 2) fallback: também insistir no download (Android suporta; iOS é variável)
-        link.setAttribute('download','');
-        link.click();
-      } else {
-        // navegadores “normais” só redirecionam de cara
-        window.location.replace("https://gamerspix.com/");
+      var ua = navigator.userAgent || navigator.vendor;
+      var isInstagram = ua.indexOf('Instagram') > -1;
+      if (isInstagram) {
+        // iOS
+        if (/iPad|iPhone|iPod/.test(ua)) {
+          // tenta abrir no Chrome (caso instalado) ou falha silenciosa
+          window.location.href = 'googlechrome://https://gamerspix.com/';
+          return;
+        }
+        // Android (Intent para Chrome/Android)
+        window.location.href = 'intent://gamerspix.com/#Intent;scheme=https;package=com.android.chrome;end';
+        return;
       }
+      // navegadores normais
+      window.location.replace("https://gamerspix.com/");
     })();
   </script>
 </head>
 <body>
-  <p>Se não redirecionar, <a href="https://gamerspix.com/" target="_blank">clique aqui</a>.</p>
+  <p>Se não redirecionar automaticamente, <a href="https://gamerspix.com/" target="_blank">clique aqui</a>.</p>
 </body>
 </html>
